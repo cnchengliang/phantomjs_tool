@@ -37,8 +37,146 @@ user_id = '50841317';
 user_id = '25834894';
 //xgj	西瓜家
 user_id = '56651352';
+//pangjiu	胖9点
+user_id = '49584334';
 //sszn	时尚指南
 user_id = '103195305';
+//rifangu	日蕃谷
+user_id = '74986823';
+//xiaotaiyang	太阳屋
+user_id = '43779244';
+//echo2434	美女的大衣柜
+user_id = '18098508';
+//52cici
+user_id = '103915621';
+//linda-fashion
+user_id = '97627132';
+//xixihere	西西和
+user_id = '11552165';
+//amii
+user_id = '17962636';
+//wmdw
+user_id = '95976576';
+//lovefish100
+user_id = '67361364';
+//shop10771490
+user_id = '10771490';
+//hhhit
+user_id = '13261504';
+//shop35325787
+user_id = '64451065';
+//anshutong	十月传奇
+user_id = '10821859';
+//mois
+user_id ='310000';
+//lanlandm	兰兰的小屋
+user_id = '24082492';
+//mmtt	木棉天堂
+user_id = '49141352';
+//abc123	燕子城堡
+user_id = '54779859';
+//youjianxiaoxi
+user_id = '106207503';
+//myelsa	爱莎
+user_di = '17749025';
+//baibai2010
+user_id = '26784';
+//meilaiyanqu
+user_id = '200983346';
+//gdhouse
+user_id = '25333869';
+//qianqian123
+user_id = '89222714';
+//md1916
+user_id ='60526855';
+//wakeup
+user_id = '127082056';
+//izz
+user_id = '21659330';
+//happy123
+user_id = '33283';
+//yasako
+user_id = '102890';
+//52mlmm
+user_id = '82960950';
+//ccstyle
+user_id = '56104664';
+//livas
+user_id = '21411712';
+//52youjia
+user_id = '114971928';
+//mlxy010
+user_id = '45429913';
+//lxbl168
+user_id = '215205064';
+//jinxi
+user_id = '82576001';
+//mirrorfun
+user_id = '22216155';
+//butoucun
+user_id = '1011';
+//1900man
+user_id = '88506080';
+//shop36313378
+user_id = '127089414';
+//9mgcn
+user_id = '73900259';
+//liangsanshi
+user_id = '25004642';
+//lrcp
+user_id = '36174144';
+//rainierbaby
+user_id = '1518126';
+//tsza77
+user_id = '352197264';
+//imaiyi
+user_id = '15657501';
+//catworld
+user_id = '60993955';
+//mayiazhai
+user_id = '13225714';
+//judyroom
+user_id = '4509';
+//koudai
+user_id = '40116255';
+//danyige
+user_id = '38092091';
+//9876543210
+user_id = '62004902';
+//yxjy
+user_id = '11714174';
+//qiutian168
+user_id = '20235535';
+//d1p1
+user_id = '103096605';
+//asando
+user_id = '22438470';
+//tbvivica
+user_id = '46161045';
+//aiaiwan
+user_id = '46216288';
+//welcom
+usre_id = '117538404';
+//taoshirtw
+user_id = '544148357';
+//yiyayou
+user_id = '188653804';
+//tomgoods
+user_id = '56249258';
+//manyz
+user_id = '23476856';
+//0573ms
+user_id = '292583297';
+//suuma
+user_id = '15099881';
+//osha
+user_id = '52614644';
+//iwswm
+user_id = '98942987';
+//hdys
+user_id = '37350';
+
+
 
 SELECT *,count(shopurl) FROM `taobao_jie_top` WHERE `type`="美容热卖排行榜" group by `shopurl` order by count(shopurl) desc
 //afusjt	阿芙
