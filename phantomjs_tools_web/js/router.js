@@ -5,14 +5,16 @@ define([
 	'Backbone',
 	'models/option',
 	'views/taobao/comment',
-	'views/taobao/jie'
+	'views/taobao/jie',
+	'views/test/vote'
 	], function (
 	$, 
 	_, 
 	Backbone, 
 	optionModel, 
 	taobaoCommentView,
-	taobaoJieView
+	taobaoJieView,
+	testVoteView
 	) {
 
 	var actions = function(options) {
@@ -25,6 +27,14 @@ define([
 				break;
 			case 'taobao.jie':				
 				taobaoJieView.getContent();
+				break;
+			case 'test.vote':
+				testVoteView.setOptions({'url':options.url});
+				testVoteView.startVote();
+				break;
+			case 'test.f5':
+				testVoteView.setOptions({'url':options.url});
+				testVoteView.f5();
 				break;
 		}
 	}
