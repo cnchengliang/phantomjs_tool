@@ -6,6 +6,7 @@ define([
 	'models/option',
 	'views/taobao/comment',
 	'views/taobao/jie',
+	'views/cs8684/bus',
 	'views/test/vote'
 	], function (
 	$, 
@@ -14,6 +15,7 @@ define([
 	optionModel, 
 	taobaoCommentView,
 	taobaoJieView,
+	cs8684View,
 	testVoteView
 	) {
 
@@ -27,6 +29,9 @@ define([
 				break;
 			case 'taobao.jie':				
 				taobaoJieView.getContent();
+				break;
+			case 'cs8684':				
+				cs8684View.getRoute();
 				break;
 			case 'test.vote':
 				testVoteView.setOptions({'url':options.url});
