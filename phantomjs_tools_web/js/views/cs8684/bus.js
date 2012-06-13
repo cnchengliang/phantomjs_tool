@@ -21,6 +21,7 @@ define([
         },
         getRoute: function()
 		{
+        	//http://changsha.8684.cn/city1.php?t=52/pp   市区线路
 			_this = this;
 			$.ajax({
 				url: _this.opts.url,
