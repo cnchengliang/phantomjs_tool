@@ -1,13 +1,12 @@
 //python ../pyphantomjs.py --cookies-file=cookies.txt --load-images=no --ignore-ssl-errors=yes init.js taobao.comment
 
-var url = '',params = {},cur_option = {},data = '',read_flag = 0,write_flag = 1,intervalId;
+var url = '',params = {},cur_option = {},send;
 
 if (phantom.args.length === 0) {
     console.log('Try to pass some args when invoking this script!');
     phantom.exit();
 } else {
-	param_str = phantom.args[0].replace(/&apos;/g, "'");
-	params = JSON.parse(param_str);
+	params = JSON.parse(phantom.args[0]);
 	url = params.url;
 	cur_option = params.option;
 }
@@ -35,7 +34,8 @@ page.onConsoleMessage = function (msg, line, source) {
 	if(content.indexOf('phantomjs_finished') != -1)
 	{
 		console.log('finished');
-		phantom.exit();
+		//phantom.exit();
+		push(JSON.stringify({'sys_result':'finished'}));
 	}else if(content.indexOf("zmq_result") != -1)
 	{
 		content = content.replace("zmq_result","");
@@ -44,29 +44,10 @@ page.onConsoleMessage = function (msg, line, source) {
 	}else if(content.indexOf("file_result") != -1)
 	{
 		content = content.replace("file_result","");
-		write2file("temp.txt",content+"\n");
+		write2file("data/temp.txt",content+"\n");
 	}else if(content.indexOf("sse_result") != -1)
 	{
-		if(write_flag == 1 && data == '')
-	    {
-			read_flag = 0;
-	    	data = content;
-	    	read_flag = 1;
-	    }else
-	    {
-	    	setTimeout(function(){
-	    		if(write_flag == 1 && data == '')
-	    	    {
-	    			read_flag = 0;
-	    	    	data = content;
-	    	    	read_flag = 1;
-	    	    }else
-    	    	{
-	    	    	write2file("log.txt",data+"---"+content+"\n");
-    	    	}
-	    	},1000);
-	    }
-		
+		push(content);		
 	}else
 	{
 		console.log('console> ' + content);
@@ -77,12 +58,13 @@ page.onConsoleMessage = function (msg, line, source) {
 page.onAlert = function (msg) {
      if(msg.indexOf('timeout') != -1)
      {
-     	proxy_cur++;
-     	var cur = proxy_cur%proxy.length;
-     	phantom.setProxy(proxy[cur]);
-     	console.log('proxy_cur> ' + proxy[cur]);page.open(urls[url_cur]);
+     	//proxy_cur++;
+     	//var cur = proxy_cur%proxy.length;
+     	//phantom.setProxy(proxy[cur]);
+     	//console.log('proxy_cur> ' + proxy[cur]);page.open(urls[url_cur]);
+    	push(JSON.stringify({'sys_result':'timeout'}));
      }else if(msg == "quit")
-     {
+     {/*
      	//第一个站点采集完成后处理
      	if(urls.length == url_cur+1)
      	{
@@ -93,14 +75,15 @@ page.onAlert = function (msg) {
 			url_cur++;
 			console.log("url_cur:"+url_cur);			
 			page.open(urls[url_cur]);
-		}
+		}*/
+    	push(JSON.stringify({'sys_result':'finished'}));
      }else
      {
      	console.log(msg);
      }
  };
 
-evaluateWithVars = function(page, func, vars)
+var evaluateWithVars = function(page, func, vars)
 {
 	var fstr = func.toString();
 	for(var v in vars)
@@ -161,44 +144,48 @@ var listening = server.listen(port, function (request, response) {
 		response.write('bye~');
 	    response.close();
 		phantom.exit();
-	}else if(request.url == '/route')
+	}else if(request.url == '/test')
+	{		
+		response.headers = {
+            'Cache': 'no-cache',
+            'Content-Type': 'text/html'
+        };
+		response.write('test');
+	    response.close();
+	}else if(request.url == '/route' && request.method == 'POST')
 	{
-		cur_option.row_xpath = "//title";
-		evaluateWithVars(
-			page,
-			function() { document.phantomjs_option = JSON.parse(_VARS_option);document.location.hash = '#' + (new Date()).getTime(); },
-			{ "option": JSON.stringify(cur_option) }
-		);
 		response.headers = {
             'Cache': 'no-cache',
             'Content-Type': 'text/html'
         };
 		response.write('route');
 	    response.close();
+	    
+	    
+		data = JSON.parse(request.post);
+		cur_option = data.option?data.option:cur_option;
+		if(data.url)
+		{			
+			page.open(data.url);
+		}else
+		{
+			evaluateWithVars(
+				page,
+				function() { document.phantomjs_option = JSON.parse(_VARS_option);document.location.hash = '#' + (new Date()).getTime(); },
+				{ "option": JSON.stringify(cur_option) }
+			);
+		}		
+	}else if(request.url == '/result')
+	{
+		response.headers = {"Cache": "no-cache", "Content-Type": "text/event-stream"};
+		send = response;
+		//response.close();
 	}else
 	{
-		var id,num = 1;
-		response.headers = {"Cache": "no-cache", "Content-Type": "text/event-stream"};
-		var intervalId = setInterval(function(){
-			id = (new Date()).getTime();			
-		    if(read_flag == 1 && data != '')
-		    {
-		    	write_flag = 0;
-		    	response.write("id:"+id+"\ndata:"+data.replace(/\"/g, "\"")+"\n\n");
-		    	data = '';
-		    	write_flag = 1;
-		    	num = 1;
-		    }else
-		    {
-		    	if(data == '' && num%1000 == 0)
-		    	{
-		    		//clearInterval(intervalId);
-			    	//response.close();
-		    	}
-		    	num++;		    	
-		    }		    
-		},10);
-		
+		response.statusCode = 404;
+		response.headers = {"Status": "404 Not Found", "Content-Type": "text/html"};
+		response.write('404 Not Found');
+		response.close();
 	}
 });
 if (!listening) {
@@ -260,3 +247,48 @@ function write2file(filename,content)
 		console.log(e);
 	}
 }
+
+function fillZero(v)
+{
+	if(v<10){v='0'+v;}
+	return v;
+}
+
+function push(content,timeout)
+{
+	if(send)
+	{
+		var myDate = new Date();
+		try {
+			var id = myDate.getTime();
+			send.write("id:"+id+"\ndata:"+content.replace(/\"/g, "\"")+"\n\n");
+			//console.log('ok');
+			//send.close();
+		}catch (e){
+			//console.log('error');				
+			var timeStr = myDate.getFullYear() + '-' + fillZero(myDate.getMonth() + 1) + '-' + fillZero(myDate.getDate()) + ' ' + fillZero(myDate.getHours()) + ':' + fillZero(myDate.getMinutes()) + ':' + fillZero(myDate.getSeconds());
+			var filename = [myDate.getFullYear(), fillZero(myDate.getMonth() + 1)].join('-');
+			write2file("log/"+filename+".txt",timeStr + '    ' + content+"\n");
+		}
+	}else
+	{
+		if(!timeout)
+		{
+			setTimeout(function(){push(content,true);},3000); 
+		}
+	}
+}
+/*
+"{\"url\":\"http://www.baidu.com\",\"option\":{\"route\":\"other.tool\",\"row_xpath\":\"//title\",\"cols\":\"\",\"attr\":\"textContent\"}}"
+
+document.write('<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>');
+var data = {'option':{'route':'other.tool','row_xpath':"//p[@id='lk']/a[3]",'cols':'','attr':'textContent'}};
+data = JSON.stringify(data);
+$.ajax({
+  type: "POST",
+  url: "http://127.0.0.1:9080/route",
+  data: data
+}).done(function( msg ) {
+  console.log( "Data Saved: " + msg );
+});
+*/

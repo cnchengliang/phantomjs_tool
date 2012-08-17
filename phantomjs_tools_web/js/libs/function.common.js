@@ -3,8 +3,9 @@ function test()
 	console.log("function.common.js");
 }
 
-function waitFor(testFx, test_args, onReady, ready_args, timeOutMillis) {
+function waitFor(testFx, test_args, onReady, ready_args, timeOutMillis, timeCheckMillis, timeOutFx) {
 	var maxtimeOutMillis = timeOutMillis ? timeOutMillis : 10000, //< Default Max Timout is 10s
+		timeCheckMillis = timeCheckMillis ? timeCheckMillis : 100, //< Default check is 100ms
 		start = new Date().getTime(),
 		condition = false;
 		var interval = null;
@@ -21,13 +22,15 @@ function waitFor(testFx, test_args, onReady, ready_args, timeOutMillis) {
 						
 					}else
 					{
+						if(typeof(timeOutFx) != 'undefined')
+							timeOutFx();
 						console.log('waitfor_timeout');
 					}					
 					clearInterval(interval); //< Stop this interval
 					interval = null;					
 				}
 			}
-		, 100); //< repeat check every 100ms
+		, timeCheckMillis); //< repeat check every 100ms
 };
 
 function getNodeDetail(args)
@@ -75,7 +78,7 @@ function getNodeAttr(args)
 	return tmp;
 }
 
-function getRows(args)
+function getRows(args,fn)
 {
 	var row_xpath = args[0],cols = args[1],attr = args[2];
 	var arrStr = [];
@@ -92,12 +95,14 @@ function getRows(args)
 					colStr[colStr.length] = getNodeAttr(args);
 				else
 					colStr[colStr.length] = tmp;
+				colStr[colStr.length-1] = colStr[colStr.length-1].replace(/[\r\t\n]/g, "");
 			}						
 			arrStr[arrStr.length] = colStr;
 			colStr = null;
 		}
 	}
-	return arrStr;
+	if(typeof(fn) != 'undefined')
+		fn(arrStr);
 }
 
 //?param=test
