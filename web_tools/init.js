@@ -177,7 +177,7 @@ var listening = server.listen(port, function (request, response) {
 		}		
 	}else if(request.url == '/result')
 	{
-		response.headers = {"Cache": "no-cache", "Content-Type": "text/event-stream"};
+		response.headers = {"Cache": "no-cache", "Content-Type": "text/event-stream;"};
 		send = response;
 		//response.close();
 	}else
@@ -261,7 +261,7 @@ function push(content,timeout)
 		var myDate = new Date();
 		try {
 			var id = myDate.getTime();
-			send.write("id:"+id+"\ndata:"+content.replace(/\"/g, "\"")+"\n\n");
+			send.write("id:"+id+"\ndata:"+escape(content.replace(/\"/g, "\""))+"\n\n");
 			//console.log('ok');
 			//send.close();
 		}catch (e){
