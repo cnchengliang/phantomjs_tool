@@ -27,9 +27,23 @@ define([
 			attr = attr.split(',');
 			var fn = function(rows) {
 				console.log(JSON.stringify({'sse_result':rows}));
+				alert('action_finished');
 			}
 			//nodes
-			getRows_2([row_xpath,cols,attr],fn);
+			if(row_xpath.length == 1)
+			{
+				getRows([row_xpath,cols,attr],fn);
+			}else
+			{
+				getRows_2([row_xpath,cols,attr],fn);
+			}
+        },
+        auto_click:function(xpath) {
+			var fn = function(ret) {
+				if(ret)	alert('action_finished');
+				else alert('action_error');
+			}
+			clickit(xpath,fn);
         }
     });
     return new otherToolView;

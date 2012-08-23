@@ -159,3 +159,45 @@ function strTrim(str, is_global) {
     if (is_global.toLowerCase() == "g") result = result.replace(/\s/g, "");
     return result;
 }
+
+//判断是否数组类型
+function isArray(v){
+    return toString.apply(v) === '[object Array]';
+}
+
+//判断是否对象类型
+function isObject(v){
+    return toString.apply(v) === '[object Object]';
+}
+
+
+function clickit(xpath,fn)
+{
+	var el = getNodeDetail([xpath,'','','']);
+	var result = true;
+	if(el != 'null')
+	{
+		var ev = document.createEvent('MouseEvents');
+		ev.initMouseEvent('click', // type
+						  false, // canBubble
+						  false, // cancelable
+						  window, // view
+						  1, // detail (number of clicks)
+						  0, // screenX
+						  0, // screenY
+						  0, // clientX
+						  0, // clientY
+						  false, // ctrlKey
+						  false, // altKey
+						  false, // shiftKey
+						  false, // metaKey
+						  0, // button
+						  null); // relatedTarget
+		el.dispatchEvent(ev);
+		result = true;
+	}else
+	{
+		result = false;
+	}
+	fn(result);
+}

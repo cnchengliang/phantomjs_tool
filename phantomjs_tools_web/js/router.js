@@ -44,7 +44,12 @@ define([
 				otherVoteView.f5();
 				break;
 			case 'other.tool':
-				otherToolView.auto_get_content(options.row_xpath,options.cols,options.attr);
+				switch(options.action.action)
+				{
+					case 'auto_get_content':otherToolView.auto_get_content(options.action.row_xpath,options.action.cols,options.action.attr);break;
+					case 'auto_click':otherToolView.auto_click(options.action.xpath);break;
+				}
+				
 				break;				
 		}
 	}
