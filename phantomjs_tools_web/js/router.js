@@ -22,7 +22,7 @@ define([
 	) {
 
 	var actions = function(options) {
-
+		
 		switch(options.route)
 		{
 			case 'taobao.comment':		

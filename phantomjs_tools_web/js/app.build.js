@@ -36,7 +36,7 @@
 	name: "main",
 	namespace: "myGlobalRequire",
 	uglify: {
-        beautify: true
+        beautify: false
     },
 	out: "../../main_built.js"
 })

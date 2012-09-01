@@ -107,7 +107,8 @@ function getRows(args,fn)
 						colStr[colStr.length] = tmp;
 				}
 				colStr[colStr.length-1] = colStr[colStr.length-1].replace(/[\r\t\n]/g, "");
-			}						
+			}
+			
 			arrStr[arrStr.length] = colStr;
 			colStr = null;
 		}
