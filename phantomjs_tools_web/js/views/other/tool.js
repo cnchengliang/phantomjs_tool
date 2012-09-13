@@ -23,9 +23,9 @@ define([
 				str = getNodeAttr(args);
 			console.log(JSON.stringify({'sse_result':strTrim(str,'g')}));*/
         	
-        	row_xpath = row_xpath.split(',');
-			cols = cols.split(',');
-			attr = attr.split(',');
+        	row_xpath = row_xpath.split(';');
+			cols = cols.split(';');
+			attr = attr.split(';');
 			var fn = function(rows) {
 				alert(JSON.stringify({'sse_result':rows}));
 				alert('action_finished');

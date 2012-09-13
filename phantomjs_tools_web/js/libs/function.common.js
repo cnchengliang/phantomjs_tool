@@ -165,6 +165,7 @@ function getParam2( name ) {
 //过滤空格
 function strTrim(str, is_global) {
     var result;
+    if(typeof(str) == 'undefined') return '';
     result = str.replace(/(^\s+)|(\s+$)/g, "");
     if (is_global.toLowerCase() == "g") result = result.replace(/\s/g, "");
     return result;
